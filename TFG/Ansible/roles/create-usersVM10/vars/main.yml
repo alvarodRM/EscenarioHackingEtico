@@ -1,0 +1,19 @@
+---
+
+users:
+- username: AdminIT
+  uid: 1220
+  nombre: Administrator IT
+  contrasena: Etsit Upm
+- username: AdminDNS
+  uid: 1221
+  nombre: Administrator DNS
+  contrasena: 012991
+- username: DomainDev
+  uid: 1222
+  nombre: Domain Developer
+  contrasena: DEVAADMIINa912
+- username: Jesus912
+  uid: 1223
+  nombre: Jesus
+  contrasena: Jesuuus292?

@@ -1,0 +1,46 @@
+---
+
+- name: "Create administrador group"
+  become: true
+  group:
+    name: "administrador"
+    state: present
+
+- name: "Create JuanPe94 account"
+  become: true
+  user:
+    name: "Juanpe94"
+    state: present
+    uid: "1220"
+    group: "administrador"
+    comment: "Juan Pedro"
+    password: "{{ 'JU4N01234' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create Clara1972 account"
+  become: true
+  user:
+    name: "Clara1972"
+    state: present
+    uid: "1221"
+    comment: "Clara"
+    password: "{{ 'C14R498' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/administrador"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of administrador group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/administrador"
+    state: present
+    line: "%administrador ALL=(ALL) NOPASSWD: ALL"

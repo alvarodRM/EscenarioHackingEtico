@@ -1,0 +1,400 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure("2") do |config|
+
+  config.ssh.insert_key = false
+
+############################################################################################################################################################################################################################################
+
+
+# Machine1 -kalilinux- setup
+  config.vm.define "vm1" do |vm1|
+    # Vagrant box from vm1
+    vm1.vm.box = "kalilinux/rolling"
+    # Hostname configuration
+    vm1.vm.hostname = 'vm1-KaliLinux-Atacante'
+    # Virtualbox vm1 machine configuration
+    vm1.vm.provider "virtualbox" do |vb_vm1|
+      vb_vm1.gui = true
+      vb_vm1.memory = 2048
+      vb_vm1.cpus = 4
+      vb_vm1.customize ["modifyvm", :id,"--name", "vm1-KaliLinux-Atacante"]
+    end
+    vm1.ssh.insert_key = false
+    # Network configuration
+    vm1.vm.network "private_network", ip: "192.168.56.50", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRUEBAS"
+    # Port configuration
+    vm1.vm.network "forwarded_port", guest: 22, host: 2220 #SSH
+    # Provisioning configuration
+    vm1.vm.provision "file", source: "Ansible", destination: "/vagrant"
+    vm1.vm.provision "shell", path: "Aprovisionamiento/vm1/vm1.bootstrap.sh"
+    vm1.vm.provision "ansible_local" do |ansible|
+      ansible.limit = "vm1"
+      ansible.verbose = "vvv"
+      ansible.inventory_path = "Ansible/hosts.yml"
+      ansible.playbook = "Ansible/playbook.yml"
+    end
+  end
+
+############################################################################################################################################################################################################################################
+
+# Machine2 -ubuntu/precise64- setup
+config.vm.define "vm2" do |vm2|
+  # Vagrant box from vm2
+  vm2.vm.box = "kyledampier/DVWA"
+  # Hostname configuration
+  vm2.vm.hostname = 'vm2-WebServer1-RedPruebas'
+  # Virtualbox vm2 machine configuration 
+  vm2.vm.provider "virtualbox" do |vb_vm2|
+    vb_vm2.gui = false
+    vb_vm2.memory = 1024
+    vb_vm2.cpus = 1
+    vb_vm2.customize ["modifyvm", :id,"--name", "vm2-WebServer1-RedPruebas"]
+  end
+  vm2.ssh.insert_key = false
+  # Network configuration
+  vm2.vm.network "private_network", ip: "192.168.56.51", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRUEBAS"
+  # Port configuration
+  vm2.vm.network "forwarded_port", guest: 22, host: 2221 #SSH
+  vm2.vm.network "forwarded_port", guest: 80, host: 8080 #HTTP
+  # Shared Folders
+  vm2.vm.synced_folder '.', '/vagrant', disabled: false
+  # Provisioning configuration
+  vm2.vm.provision "shell", path: "Aprovisionamiento/vm2/vm2.bootstrap.sh"
+end
+
+############################################################################################################################################################################################################################################
+
+# Machine3 -ubuntu/xenial64- setup
+  config.vm.define "vm3" do |vm3|
+    # Vagrant box from vm3
+    vm3.vm.box = "ubuntu/xenial64"
+    # Hostname configuration
+    vm3.vm.hostname = 'vm3-WebServer2-RedPruebas'
+    # Virtualbox vm3 machine configuration
+    vm3.vm.provider "virtualbox" do |vb_vm3|
+      vb_vm3.gui = false
+      vb_vm3.memory = 1024
+      vb_vm3.cpus = 1
+      vb_vm3.customize ["modifyvm", :id,"--name", "vm3-WebServer2-RedPruebas"]
+    end
+    vm3.ssh.insert_key = false
+    # Network configuration
+    vm3.vm.network "private_network", ip: "192.168.56.52", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRUEBAS"
+    # Port configuration
+    vm3.vm.network "forwarded_port", guest: 22, host: 2248 #SSH
+    vm3.vm.network "forwarded_port", guest: 80, host: 8081 #HTTP
+    #Shared Folders
+    vm3.vm.synced_folder '.', '/vagrant', disabled: false
+    # Provisioning configuration
+    vm3.vm.provision "file", source: "Ansible", destination: "."
+    vm3.vm.provision "file", source: "Aprovisionamiento/vm3/default.conf", destination: "/tmp/juice-shop/default.conf"
+    vm3.vm.provision "shell", path: "Aprovisionamiento/vm3/vm3.bootstrap.sh"
+    vm3.vm.provision "ansible_local" do |ansible|
+      ansible.limit = "vm3"
+      ansible.inventory_path = "/home/vagrant/hosts.yml"
+      ansible.playbook = "/home/vagrant/playbook.yml"
+      ansible.install = true
+    end
+    vm3.vm.provision "shell", path: "Aprovisionamiento/vm3/vm3.bootstrap2.sh"
+  end
+
+############################################################################################################################################################################################################################################
+
+# Machine4 -Ubuntu/Metasploitable2- Client1 setup
+config.vm.define "vm4" do |vm4|
+  # Vagrant box from vm5
+  vm4.vm.box = "ifly53e/metasploitable2updateable"
+  vm4.vm.box_version = "0.0.4"
+  # Hostname configuration
+  vm4.vm.hostname = 'vm4-Client1'
+  # Virtualbox vm5 machine configuration
+  vm4.vm.provider "virtualbox" do |vb_vm4|
+    vb_vm4.gui = false
+    vb_vm4.memory = 1024
+    vb_vm4.cpus = 1
+    vb_vm4.customize ["modifyvm", :id,"--name", "vm4-Client1"]
+  end
+  vm4.ssh.insert_key = false
+  # Network configuration
+  vm4.vm.network "private_network", ip: "192.168.56.53", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRUEBAS"
+  # Port configuration
+  vm4.vm.network "forwarded_port", guest: 22, host: 2224 #SSH
+  # Provisioning configuration
+  vm4.vm.provision "shell", path: "Aprovisionamiento/vm4/vm4.bootstrap.sh"
+end
+
+############################################################################################################################################################################################################################################
+
+# Machine5 -KaliLinux- Client2 setup
+  config.vm.define "vm5" do |vm5|
+    # Vagrant box from vm4
+    vm5.vm.box = "kalilinux/rolling"
+    # Hostname configuration
+    vm5.vm.hostname = 'vm5-Client2'
+    # Virtualbox vm4 machine configuration
+    vm5.vm.provider "virtualbox" do |vb_vm5|
+      vb_vm5.gui = false
+      vb_vm5.memory = 1024
+      vb_vm5.cpus = 1
+      vb_vm5.customize ["modifyvm", :id,"--name", "vm5-Client2"]
+    end
+    vm5.ssh.insert_key = false
+    # Network configuration
+    vm5.vm.network "private_network", ip: "192.168.56.54", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRUEBAS"
+    vm5.vm.network "private_network", ip: "192.168.56.97", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRE_PRODUCCION"
+    # Port configuration
+    vm5.vm.network "forwarded_port", guest: 22, host: 2223 #SSH
+    # Provisioning configuration
+    vm5.vm.provision "file", source: "Ansible", destination: "/vagrant"
+    vm5.vm.provision "shell", path: "Aprovisionamiento/vm5/vm5.bootstrap.sh"
+    vm5.vm.provision "ansible_local" do |ansible|
+      ansible.limit = "vm5"
+      ansible.inventory_path = "Ansible/hosts.yml"
+      ansible.playbook = "Ansible/playbook.yml"
+    end
+    vm5.vm.provision "shell", path: "Aprovisionamiento/vm5/vm5.bootstrap2.sh"
+  end
+
+############################################################################################################################################################################################################################################
+
+# Machine6 -ubuntu/trusty64- FTPServer setup
+  config.vm.define "vm6" do |vm6|
+    # Vagrant box from vm6
+    vm6.vm.box = "ubuntu/trusty64"
+    # Hostname configuration
+    vm6.vm.hostname = 'vm6-FTPServer1-RedPreProduccion'
+    # Virtualbox vm6 machine configuration
+    vm6.vm.provider "virtualbox" do |vb_vm6|
+      vb_vm6.gui = false
+      vb_vm6.memory = 1024
+      vb_vm6.cpus = 1
+      vb_vm6.customize ["modifyvm", :id,"--name", "vm6-FTPServer1-RedPreProduccion"]
+    end
+    vm6.ssh.insert_key = false
+    # Network configuration
+    vm6.vm.network "private_network", ip: "192.168.56.98", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRE_PRODUCCION", gw: "192.168.56.97"
+    # Port configuration
+    vm6.vm.network "forwarded_port", guest: 21, host: 5678 #FTP
+    vm6.vm.network "forwarded_port", guest: 22, host: 2225 #SSH
+    vm6.vm.network "forwarded_port", guest: 80, host: 8083 #HTTP
+    # Provisioning configuration
+    vm6.vm.provision "file", source: "Ansible", destination: "/vagrant"
+    vm6.vm.provision "shell", path: "Aprovisionamiento/vm6/vm6.bootstrap.sh"
+    vm6.vm.provision "ansible_local" do |ansible|
+      ansible.limit = "vm6"
+      ansible.inventory_path = "Ansible/hosts.yml"
+      ansible.playbook = "Ansible/playbook.yml"
+    end
+    vm6.vm.provision "shell", path: "Aprovisionamiento/vm6/vm6.bootstrap2.sh"
+  end
+
+############################################################################################################################################################################################################################################
+
+# Machine7 -rapid7/metasploitable3-win2k8- setup
+config.vm.define "vm7" do |vm7|
+  # Vagrant box from vm9
+  vm7.vm.box = "rapid7/metasploitable3-win2k8"
+  # Hostname configuration
+  vm7.vm.hostname = 'vm7-WebServer2-RedPreProduccion'
+  # Virtualbox vm9 machine configuration
+  vm7.vm.provider "virtualbox" do |vb_vm7|
+    vb_vm7.gui = false
+    vb_vm7.memory = 1024
+    vb_vm7.cpus = 1
+    vb_vm7.customize ["modifyvm", :id,"--name", "vm7-WebServer2-RedPreProduccion"]
+  end
+  vm7.ssh.insert_key = false
+  # Network configuration
+  vm7.vm.network "private_network", ip: "192.168.56.99", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRE_PRODUCCION"
+  # Port configuration
+  vm7.vm.network "forwarded_port", guest: 22, host: 2228 #SSH
+  #Shared Folders
+  vm7.vm.synced_folder '.', '/vagrant', disabled: false
+  # Provisioning configuration
+  vm7.vm.provision "shell", privileged: "true", inline: <<-'POWERSHELL'
+    mkdir /secret 
+    mkdir /confidencial1
+    mkdir /confidencial2
+    mkdir /confidencial3 
+    mkdir /confidencial4 
+    mkdir /confidencial5 
+    mkdir /confidencial6 
+    mkdir /confidencial7 
+    mkdir /confidencial8 
+    mkdir /confidencial9 
+    mkdir /confidencial10 
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial1/passwords.txt
+    mv facturas.txt /confidencial1/facturas.txt
+    mv importante.txt /confidencial1/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial2/passwords.txt
+    mv facturas.txt /confidencial2/facturas.txt
+    mv importante.txt /confidencial2/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial3/passwords.txt
+    mv facturas.txt /confidencial3/facturas.txt
+    mv importante.txt /confidencial3/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial4/passwords.txt
+    mv facturas.txt /confidencial4/facturas.txt
+    mv importante.txt /confidencial4/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial5/passwords.txt
+    mv facturas.txt /confidencial5/facturas.txt
+    mv importante.txt /confidencial5/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial6/passwords.txt
+    mv facturas.txt /confidencial6/facturas.txt
+    mv importante.txt /confidencial6/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial7/passwords.txt
+    mv facturas.txt /confidencial7/facturas.txt
+    mv importante.txt /confidencial7/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial8/passwords.txt
+    mv facturas.txt /confidencial8/facturas.txt
+    mv importante.txt /confidencial8/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial9/passwords.txt
+    mv facturas.txt /confidencial9/facturas.txt
+    mv importante.txt /confidencial9/importante.txt
+    echo "no hay nada, picaste ;)" >> passwords.txt
+    echo "no hay nada, picaste ;)" >> facturas.txt
+    echo "no hay nada, picaste ;)" >> importante.txt
+    mv passwords.txt /confidencial10/passwords.txt
+    mv facturas.txt /confidencial10/facturas.txt
+    mv importante.txt /confidencial10/importante.txt
+    echo "46 65 6c 69 63 69 74 61 63 69 6f 6e 65 73 20 68 61 73 20 6f 62 74 65 6e 69 64 6f 20 74 75 20 73 65 67 75 6e 64 61 20 62 61 6e 64 65 72 61 20 64 65 20 6c 61 20 64 69 66 69 63 75 6c 74 61 64 20 6d 65 64 69 61 20 64 65 6c 20 65 73 63 65 6e 61 72 69 6f" >> flag6.txt
+    echo "46 6c 61 67 73 20 63 6f 6d 70 6c 65 74 61 64 6f 73 20 32 2f 34 20 64 65 20 6c 61 20 64 69 66 69 63 75 6c 74 61 64 20 6d 65 64 69 61 20 64 65 6c 20 65 73 63 65 6e 61 72 69 6f 2e" >> flag6.txt
+    echo "43 c3 b3 64 69 67 6f 20 73 65 63 72 65 74 6f 20 64 65 6c 20 46 4c 41 47 36 3a 20 75 64 36 63 62 68 36 32 39 4f 30 4f" >> flag6.txt
+    echo "50 49 53 54 41 3a 20 4c 61 20 73 69 67 75 69 65 6e 74 65 20 62 61 6e 64 65 72 61 20 6c 61 20 65 6e 63 6f 6e 74 72 61 72 c3 a1 73 20 65 6e 20 6c 61 20 49 50 20 31 39 32 2e 31 36 38 2e 35 36 2e 31 30 30" >> pistas.txt
+    echo "52 65 76 69 73 65 20 6c 6f 73 20 73 65 72 76 69 63 69 6f 73 20 76 75 6c 6e 65 72 61 62 6c 65 73 20 64 65 20 64 69 63 68 61 20 6d c3 a1 71 75 69 6e 61 20 79 20 63 6f 6e 73 69 67 61 20 70 65 72 6d 69 73 6f 73 20 64 65 20 61 64 6d 69 6e 69 73 74 72 61 64 6f 72 20 64 65 6c 20 73 69 73 74 65 6d 61 2e 0d 0a" >> pistas.txt
+    echo "4c 61 20 62 61 6e 64 65 72 61 20 73 69 65 74 65 20 6c 61 20 65 6e 63 6f 6e 74 72 61 72 c3 a1 73 20 65 6e 20 65 6c 20 73 69 73 74 65 6d 61 20 64 65 20 66 69 63 68 65 72 6f 73 20 64 65 20 64 69 63 68 61 20 6d c3 a1 71 75 69 6e 61 2e 20 53 75 65 72 74 65 20 3b 29" >> pistas.txt
+    mv flag6.txt /secret/flag6.txt
+    mv pistas.txt /secret/pistas.txt
+  POWERSHELL
+end
+
+############################################################################################################################################################################################################################################
+
+# Machine8 -ubuntu/metasploitable2- setup
+  config.vm.define "vm8" do |vm8|
+    # Vagrant box from vm8
+    vm8.vm.box = "ifly53e/metasploitable2updateable"
+    # Hostname configuration
+    vm8.vm.hostname = 'vm8-Client3'
+    # Virtualbox vm8 machine configuration
+    vm8.vm.provider "virtualbox" do |vb_vm8|
+      vb_vm8.gui = false
+      vb_vm8.memory = 1024
+      vb_vm8.cpus = 1
+      vb_vm8.customize ["modifyvm", :id,"--name", "vm8-Client3"]
+    end
+    vm8.ssh.insert_key = false
+    # Network configuration
+    vm8.vm.network "private_network", ip: "192.168.56.100", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRE_PRODUCCION"
+    # Port configuration
+    vm8.vm.network "forwarded_port", guest: 22, host: 2227 #SSH
+    # Shared Folders
+    vm8.vm.synced_folder '.', '/vagrant', disabled: false
+    # Provisioning configuration
+    vm8.vm.provision "shell", path: "Aprovisionamiento/vm8/vm8.bootstrap.sh"
+  end
+
+############################################################################################################################################################################################################################################
+
+# Machine9 -bento/ubuntu-16.04- setup
+config.vm.define "vm9" do |vm9|
+  # Vagrant box from vm9
+  vm9.vm.box = "bento/ubuntu-16.04"
+  # Hostname configuration
+  vm9.vm.hostname = 'vm9-Client4'
+  # Virtualbox vm7 machine configuration
+  vm9.vm.provider "virtualbox" do |vb_vm9|
+    vb_vm9.gui = false
+    vb_vm9.memory = 1024
+    vb_vm9.cpus = 1
+    vb_vm9.customize ["modifyvm", :id,"--name", "vm9-Client4"]
+  end
+  vm9.ssh.insert_key = false
+  # Network configuration
+  vm9.vm.network "private_network", ip: "192.168.56.101", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRE_PRODUCCION"
+  vm9.vm.network "private_network", ip: "192.168.56.202", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRODUCCION"
+  vm9.vm.network "public_network", ip: "192.168.246.111", bridge: [
+    "en0: Wi-Fi (Wireless)",
+  ]
+  # Port configuration
+  vm9.vm.network "forwarded_port", guest: 22, host: 2226 #SSH
+  vm9.vm.network "forwarded_port", guest: 80, host: 8084 #HTTP
+  # SharedFolders configuration
+  vm9.vm.provision "file", source: "Ansible", destination: "/home/vagrant"
+  # Provisioning configuration
+  vm9.vm.provision "shell", path: "Aprovisionamiento/vm9/vm9.bootstrap.sh"
+  vm9.vm.provision "ansible_local" do |ansible|
+    ansible.limit = "vm9"
+    ansible.inventory_path = "/home/vagrant/hosts.yml"
+    ansible.playbook = "/home/vagrant/playbook.yml"
+  end
+  vm9.vm.provision "shell", path: "Aprovisionamiento/vm9/vm9.bootstrap2.sh"
+  vm9.vm.provision "shell",
+  inline: "sudo systemctl restart apache2"
+end
+
+############################################################################################################################################################################################################################################
+
+# Machine10 -bento/ubuntu-16.04- setup
+  config.vm.define "vm10" do |vm10|
+    # Vagrant box from vm12
+    vm10.vm.box = "bento/ubuntu-16.04"
+    # Hostname configuration
+    vm10.vm.hostname = 'vm10-DNSServer3-RedProduccion'
+    # Virtualbox vm12 machine configuration
+    vm10.vm.provider "virtualbox" do |vb_vm10|
+      vb_vm10.gui = false
+      vb_vm10.memory = 1024
+      vb_vm10.cpus = 1
+      vb_vm10.customize ["modifyvm", :id,"--name", "vm10-DNSServer3-RedProduccion"]
+    end
+    vm10.ssh.insert_key = false
+    # Network configuration
+    vm10.vm.network "private_network", ip: "192.168.56.201", :netmask => "255.255.255.248", virtualbox__intnet: "RED_PRODUCCION"
+    # Port configuration
+    vm10.vm.network "forwarded_port", guest: 22, host: 2231 #SSH
+    # Shared Folders
+    vm10.vm.synced_folder '.', '/vagrant', disabled: false
+    # Provisioning configuration
+    vm10.vm.provision "file", source: "Ansible", destination: "."
+    vm10.vm.provision "shell", path: "Aprovisionamiento/vm10/vm10.bootstrap.sh"
+    vm10.vm.provision "ansible_local" do |ansible|
+      ansible.limit = "vm10"
+      ansible.inventory_path = "/home/vagrant/hosts.yml"
+      ansible.playbook = "/home/vagrant/playbook.yml"
+      ansible.install = true
+    end
+    vm10.vm.provision "shell", path: "Aprovisionamiento/vm10/vm10.bootstrap2.sh"
+  end
+
+############################################################################################################################################################################################################################################
+
+end

@@ -1,0 +1,38 @@
+- name: Install packages
+  apt:
+    name:
+      - dovecot-mysql
+      - dovecot-lmtpd
+      - dovecot-imapd
+      - dovecot-sieve
+    state: present
+
+- name: Add configurations
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/dovecot/{{ item }}"
+  with_items:
+    - conf.d/10-auth.conf
+    - conf.d/10-mail.conf
+    - conf.d/10-master.conf
+    - conf.d/10-ssl.conf
+    - conf.d/20-lmtp.conf
+    - conf.d/90-sieve.conf
+    - conf.d/auth-sql.conf.ext
+    - dovecot.conf
+    - dovecot-sql.conf.ext
+  register: dovecot_config
+
+- name: Create sieve directory
+  file:
+    name: /var/mail/sieve
+    state: directory
+    owner: vmail
+    group: vmail
+    recurse: true
+
+- name: Restart service
+  systemd:
+    name: dovecot
+    state: restarted
+  when: dovecot_config.changed

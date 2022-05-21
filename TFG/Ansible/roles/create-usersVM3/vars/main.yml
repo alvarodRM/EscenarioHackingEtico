@@ -1,0 +1,11 @@
+---
+
+users:
+- username: AdminPruebas
+  uid: 1220
+  nombre: Administrador Pruebas
+  contrasena: AdMinistRat0r1
+- username: UsuarioPruebas
+  uid: 1221
+  nombre: Usuario Pruebas
+  contrasena: USeRPruEBas00

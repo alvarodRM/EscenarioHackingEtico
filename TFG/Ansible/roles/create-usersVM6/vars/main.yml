@@ -1,0 +1,19 @@
+---
+
+users:
+- username: AdminIT
+  uid: 1220
+  nombre: Administrator IT
+  contrasena: AdMiN9021
+- username: AdminFTP
+  uid: 1221
+  nombre: Administrator FTP
+  contrasena: adminFTP00117
+- username: FTPDev
+  uid: 1272
+  nombre: FTP Developer
+  contrasena: Awj92ws
+- username: Paula96
+  uid: 1223
+  nombre: Paula
+  contrasena: Paula1964

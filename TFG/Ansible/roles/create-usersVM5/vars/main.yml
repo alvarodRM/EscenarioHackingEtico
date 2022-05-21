@@ -1,0 +1,11 @@
+---
+
+users:
+- username: Nuria
+  uid: 1220
+  nombre: Nuria 
+  contrasena: 101010
+- username: Pepe19
+  uid: 1221
+  nombre: Pepe
+  contrasena: 1169

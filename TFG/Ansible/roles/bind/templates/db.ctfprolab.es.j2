@@ -1,0 +1,28 @@
+$TTL 86400
+@   IN     SOA     serverdns.ctfprolab.es. root.ctfprolab.es. (
+             2      ; Serial
+        604800      ; Refresh
+         86400      ; Retry
+        604800      ; Expire
+         86400 )    ; Minimum TTL 
+
+                IN  NS          serverdns.ctfprolab.es.
+serverdns       IN  A           192.168.56.201
+dvwaserver      IN  A           192.168.56.51
+juiceserver     IN  A           192.168.56.52
+client1         IN  A           192.168.56.53
+client2         IN  A           192.168.56.54
+client2         IN  A           192.168.56.97
+ftpserver       IN  A           192.168.56.98
+windowsserver   IN  A           192.168.56.99
+client3         IN  A           192.168.56.100
+client4         IN  A           192.168.56.101
+client4         IN  A           192.168.56.200
+dns             IN  A           192.168.56.201
+dvwa            IN  CNAME       dvwaserver
+juiceshop       IN  CNAME       juiceserver
+ftp             IN  CNAME       ftpserver
+mail            IN  CNAME       mailserver
+windows2008     IN  CNAME       windowsserver
+ftp             IN  CNAME       ftpserver
+dnsServer       IN  CNAME       serverdns

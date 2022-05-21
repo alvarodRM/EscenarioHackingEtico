@@ -1,0 +1,58 @@
+- name: "Install ansible python3 mysql dependency"
+  apt:
+    name: python3-mysqldb
+    state: latest
+
+- name: Install package
+  apt:
+    name:
+      - mariadb-server
+      - python-mysqldb
+    state: present
+
+- name: Setup mailserver database
+  mysql_db:
+    name: mailserver
+    state: present
+
+- name: Setup mailserver user
+  mysql_user:
+    name: mailserver
+    host: localhost
+    password: "{{ mysql_password }}"
+    priv: 'mailserver.*:ALL'
+    state: present
+
+- name: Copy database dump file
+  copy:
+    src: mailserver.sql
+    dest: /tmp
+  changed_when: false
+
+- name: Import database dump
+  mysql_db:
+    state: import
+    name: all
+    target: /tmp/mailserver.sql
+  changed_when: false
+
+- name: Delete database dump file
+  file:
+    name: /tmp/mailserver.sql
+    state: absent
+  changed_when: false
+
+- name: Create domain records
+  shell: mysql mailserver -e 'INSERT IGNORE INTO `virtual_domains` (`name`) VALUES ("{{ item }}");'
+  with_items: "{{ mail_domains }}"
+  changed_when: false
+
+- name: Create user records
+  shell: mysql mailserver -e 'INSERT IGNORE INTO `virtual_users` (`domain_id`, `email`, `password`) VALUES ((SELECT id FROM virtual_domains WHERE "{{ item.username }}" LIKE CONCAT("%@", name)), "{{ item.username }}", ENCRYPT("{{ item.password }}", CONCAT("$6$", SUBSTRING(SHA(RAND()), -16))));'
+  with_items: "{{ mail_users }}"
+  changed_when: false
+
+- name: Create alias records
+  shell: mysql mailserver -e 'INSERT IGNORE INTO `virtual_aliases` (`domain_id`, `source`, `destination`) VALUES ((SELECT id FROM virtual_domains WHERE "{{ item.source }}" LIKE CONCAT("%@", name)), "{{ item.source }}", "{{ item.destination }}");'
+  with_items: "{{ mail_aliases }}"
+  changed_when: false

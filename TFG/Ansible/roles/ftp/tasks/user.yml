@@ -1,0 +1,12 @@
+---
+
+- name: Create a ftp users
+  become: yes
+  user:
+    name: alvaro
+    password: "{{ 'test0164' | password_hash('sha512') }}"
+    state: present
+    shell: /bin/bash
+    system: no
+    createhome: no
+    home: /home/ftp/alvaro

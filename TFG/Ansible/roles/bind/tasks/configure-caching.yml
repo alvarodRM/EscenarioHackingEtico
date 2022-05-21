@@ -1,0 +1,9 @@
+- name: template
+  template:
+    src: "/home/vagrant/roles/bind/templates/named.conf.options.j2"
+    dest: /etc/bind/named.conf.options
+    backup: yes
+
+- service:
+    name: bind9
+    state: restarted

@@ -1,0 +1,82 @@
+---
+
+
+- name: "Create administrators group"
+  become: true
+  group:
+    name: "administrators"
+    state: present
+
+- name: "Create developers group"
+  become: true
+  group:
+    name: "developers"
+    state: present
+
+- name: "Create AdminIT account"
+  become: true
+  user:
+    name: "AdminIT"
+    state: present
+    group: "administrators"
+    uid: "1220"
+    comment: "Administrator IT"
+    password: "{{ 'AdMiN9021' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create AdminWeb account"
+  become: true
+  user:
+    name: "AdminWeb"
+    state: present
+    group: "administrators"
+    uid: "1221"
+    comment: "Administrator Web"
+    password: "{{ 'adminWeb00017' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create WordpressDev account"
+  become: true
+  user:
+    name: "WordpressDev"
+    state: present
+    group: "developers"
+    uid: "1222"
+    comment: "Wordpress Developer"
+    password: "{{ 'admin' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create Joaquin17 account"
+  become: true
+  user:
+    name: "Joaquin17"
+    state: present
+    uid: "1223"
+    comment: "Joaquin"
+    password: "{{ 'Joaquin019H9' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Set password expiration days limit"
+  become: true
+  raw: "chage -M 365 {{ item.username }}"
+  with_items: "{{ users }}"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/administrators"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of administrators group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/administrators"
+    state: present
+    line: "%administrators ALL=(ALL) NOPASSWD: ALL"

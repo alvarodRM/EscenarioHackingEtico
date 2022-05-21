@@ -1,0 +1,82 @@
+---
+
+
+- name: "Create administrators group"
+  become: true
+  group:
+    name: "administrators"
+    state: present
+
+- name: "Create developers group"
+  become: true
+  group:
+    name: "developers"
+    state: present
+
+- name: "Create AdminIT account"
+  become: true
+  user:
+    name: "AdminIT"
+    state: present
+    group: "administrators"
+    uid: "1220"
+    comment: "Administrator IT"
+    password: "{{ 'Etsit Upm' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create AdminDNS account"
+  become: true
+  user:
+    name: "AdminDNS"
+    state: present
+    group: "administrators"
+    uid: "1221"
+    comment: "Administrator DNS"
+    password: "{{ '012991' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create DomainDev account"
+  become: true
+  user:
+    name: "DomainDev"
+    state: present
+    group: "developers"
+    uid: "1222"
+    comment: "Domain Developer"
+    password: "{{ 'DEVAADMIINa912' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create Jesus912 account"
+  become: true
+  user:
+    name: "Jesus912"
+    state: present
+    uid: "1223"
+    comment: "Jesus"
+    password: "{{ 'Jesuuus292?' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Set password expiration days limit"
+  become: true
+  raw: "chage -M 365 {{ item.username }}"
+  with_items: "{{ users }}"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/administrators"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of administrators group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/administrators"
+    state: present
+    line: "%administrators ALL=(ALL) NOPASSWD: ALL"

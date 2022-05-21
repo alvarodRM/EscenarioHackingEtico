@@ -1,0 +1,34 @@
+---
+
+- name: Install FTP package on Ubuntu
+  become: yes
+  apt:
+    name: vsftpd
+    state: present
+    update_cache: yes
+  
+- name: Create home directory for ftp users
+  become: yes
+  file:
+    path: /home/ftp/alvaro
+    state: directory
+    mode: 0755
+  
+- name: Modify FTP configuration
+  become: yes
+  lineinfile:
+    dest: /etc/vsftpd.conf
+    backup: yes
+    backrefs: yes
+    state: present
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+  with_items:
+    - { regexp: anonymous_enable=NO, line: anonymous_enable=YES }
+    - { regexp: listen=NO, line: listen=YES }
+    - { regexp: listen_ipv6=YES, line: listen_ipv6=NO }
+    - { regexp: write_enable, line: write_enable=YES }
+
+- name: Start FTP server
+  become: yes
+  service: name=vsftpd state=restarted enabled=yes

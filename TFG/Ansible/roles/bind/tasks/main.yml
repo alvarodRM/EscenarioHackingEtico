@@ -1,0 +1,7 @@
+- name: deploy caching-only nameserver configs 
+  import_tasks: configure-caching.yml
+
+- name: deploy primary dns server configs
+  import_tasks: configure-dns.yml
+
+

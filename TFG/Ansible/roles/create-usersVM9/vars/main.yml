@@ -1,0 +1,19 @@
+---
+
+users:
+- username: AdminIT
+  uid: 1220
+  nombre: Administrator IT
+  contrasena: AdMiN9021
+- username: AdminWeb
+  uid: 1221
+  nombre: Administrator Web
+  contrasena: adminWeb00017
+- username: WordpressDev
+  uid: 1222
+  nombre: Wordpress Developer
+  contrasena: po4829n
+- username: Joaquin17
+  uid: 1223
+  nombre: Joaquin
+  contrasena: Joaquin019H9

@@ -1,0 +1,40 @@
+---
+
+- name: "Create administrador group"
+  become: true
+  group:
+    name: "AdminAttack"
+    state: present
+
+- name: "Create Attack account"
+  become: true
+  user:  
+    name: "Attack"
+    state: present
+    group: "AdminAttack"
+    uid: "1220"
+    comment: "Attack Anonymous"
+    password: "{{ 'uHuis9hj' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Set password expiration days limit"
+  become: true
+  raw: "chage -M 365 {{ item.username }}"
+  with_items: "{{ users }}"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/AdminAttack"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of adminAttack group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/AdminAttack"
+    state: present
+    line: "%AdminAttack ALL=(ALL) NOPASSWD: ALL"

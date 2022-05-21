@@ -1,0 +1,4 @@
+---
+
+- name: Install GIT
+  apt: name=git state=latest

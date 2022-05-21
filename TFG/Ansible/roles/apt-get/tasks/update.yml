@@ -1,0 +1,17 @@
+- name: apt-get update
+  become: true
+  apt:
+    update_cache: yes
+
+- name: Update all packages to the latest version
+  become: true
+  apt:
+    name: "*"
+    state: latest
+
+- name: Upgrade all packages to the latest version
+  become: true
+  apt:
+    upgrade: dist
+
+

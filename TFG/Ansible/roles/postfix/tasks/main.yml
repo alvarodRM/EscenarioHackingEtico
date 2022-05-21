@@ -1,0 +1,29 @@
+- name: Install packages
+  apt:
+    name:
+      - postfix
+      - postfix-mysql
+    state: present
+
+- name: Define mailname
+  copy:
+    dest: /etc/mailname
+    content: "{{ inventory_hostname }}\n"
+
+- name: Update configs
+  template:
+    src: "{{ item }}.j2"
+    dest: "/etc/postfix/{{ item }}"
+  with_items:
+    - main.cf
+    - master.cf
+    - virtual-alias-maps.cf
+    - virtual-mailbox-domains.cf
+    - virtual-mailbox-maps.cf
+  register: postfix_main_config
+
+- name: Restart service
+  systemd:
+    name: postfix
+    state: restarted
+  when: postfix_main_config.changed

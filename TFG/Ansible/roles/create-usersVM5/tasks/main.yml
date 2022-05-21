@@ -1,0 +1,52 @@
+---
+
+- name: "Create administrador group"
+  become: true
+  group:
+    name: "administrador"
+    state: present
+
+- name: "Create Nuria00 account"
+  become: true
+  user:
+    name: "Nuria"
+    state: present
+    uid: "1220"
+    group: "administrador"
+    comment: "Nuria"
+    password: "{{ '101010' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+
+- name: "Create Pepe19 account"
+  become: true
+  user:
+    name: "Pepe19"
+    state: present
+    uid: "1221"
+    comment: "Pepe"
+    password: "{{ '1169' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Set password expiration days limit"
+  become: true
+  raw: "chage -M 365 {{ item.username }}"
+  with_items: "{{ users }}"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/administrador"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of administrador group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/administrador"
+    state: present
+    line: "%administrador ALL=(ALL) NOPASSWD: ALL"

@@ -1,0 +1,81 @@
+---
+
+- name: "Create administrators group"
+  become: true
+  group:
+    name: "administrators"
+    state: present
+
+- name: "Create developers group"
+  become: true
+  group:
+    name: "developers"
+    state: present
+
+- name: "Create AdminIT account"
+  become: true
+  user:
+    name: "AdminIT"
+    state: present
+    group: "administrators"
+    uid: "1220"
+    comment: "Administrator IT"
+    password: "{{ 'AdMiN9021' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create AdminFTP account"
+  become: true
+  user:
+    name: "AdminFTP"
+    state: present
+    group: "administrators"
+    uid: "1221"
+    comment: "Administrator FTP"
+    password: "{{ 'ju4n8019802' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create FTPDev account"
+  become: true
+  user:
+    name: "FTPDev"
+    state: present
+    group: "developers"
+    uid: "1272"
+    comment: "FTP Developer"
+    password: "{{ 'Awj92ws' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Create Paula96 account"
+  become: true
+  user:
+    name: "Paula96"
+    state: present
+    uid: "1223"
+    comment: "Paula"
+    password: "{{ 'Paula1964' | password_hash('sha512') }}"
+    expires: "-1"
+    shell: "/bin/bash"
+
+- name: "Set password expiration days limit"
+  become: true
+  raw: "chage -M 365 {{ item.username }}"
+  with_items: "{{ users }}"
+
+- name: "Touch administrador file"
+  become: true
+  file:
+    path: "/etc/sudoers.d/administrators"
+    state: touch
+    mode: "0644"
+    owner: "root"
+    group: "root"
+
+- name: "Allow users of administrators group to sudo without a password"
+  become: true
+  lineinfile:
+    dest: "/etc/sudoers.d/administrators"
+    state: present
+    line: "%administrators ALL=(ALL) NOPASSWD: ALL"

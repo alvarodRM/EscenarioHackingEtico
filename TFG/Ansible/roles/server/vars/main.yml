@@ -1,0 +1,4 @@
+---
+# vars file for server
+
+root_mysql_password: admin

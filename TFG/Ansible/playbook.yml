@@ -1,0 +1,58 @@
+---
+- name: vm1
+  hosts: atacante
+  become: true
+  roles:
+    - {name: create-usersVM1, tags: create-usersVM1}
+
+- name: vm3
+  hosts: webserver2
+  become: true
+  roles:
+    - {name: create-usersVM3, tags: create-usersVM3}
+
+- name: vm5
+  hosts: client2
+  become: true
+  roles:
+    - {name: create-usersVM5, tags: create-usersVM5}
+
+- name: vm6
+  hosts: serverftp
+  become: true
+  roles:
+    - {name: ftp, tags: ftp}
+    - {name: create-usersVM6, tags: create-usersVM6}
+
+- name: vm8
+  hosts: client3
+  become: true
+  roles:
+    - {name: create-usersVM8, tags: create-usersVM8}
+
+- name: vm9
+  hosts: wordpress
+  become: true
+  roles:
+    - {name: server, tags: server}
+    - {name: php, tags: php}
+    - {name: mysql, tags: mysql}
+    - {name: wordpress, tags: wordpress}
+    - {name: create-usersVM9, tags: create-usersVM9}
+
+- name: vm10
+  hosts: serverdns
+  become: true
+  roles:
+    - {name: apt-get, tags: apt-get}
+    - {name: bind, tags: bind}
+    - {name: create-usersVM10, tags: create-usersVM10}
+
+- name: vm10update
+  hosts: serverdns
+  become: true
+  tasks:
+    - name: update-only
+      import_role:
+        name: apt-get
+        tasks_from: update.yml

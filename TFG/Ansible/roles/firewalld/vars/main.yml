@@ -1,0 +1,82 @@
+---
+# vars file for ansible-firewalld
+firewalld_custom_zones:
+  - zone: 'privateDNS'
+    state: 'enabled'
+    present: true
+    interface: 'eth1'
+
+firewalld_enable_immediately: true
+
+firewalld_rules:
+  - service: 'dns'
+    permanent: true
+    state: 'enabled'
+    zone: 'privateDNS'
+
+  - service: 'http'
+    state: 'enabled'
+    permanent: true
+    zone: 'public'
+
+  - service: 'https'
+    state: 'enabled'
+    permanent: true
+    state: 'enabled'
+    zone: 'public'
+
+  - service: 'smtp'
+    state: 'enabled'
+    permanent: true
+    state: 'enabled'
+    zone: 'trusted'
+
+  - service: 'ssh'
+    state: 'enabled'
+    permanent: true
+    state: 'enabled'
+    zone: 'trusted'
+
+  - service: 'ftp'
+    state: 'enabled'
+    permanent: true
+    state: 'enabled'
+    zone: 'trusted'
+
+  - service: 'telnet'
+    state: 'enabled'
+    permanent: true
+    zone: 'trusted'
+    
+  - service: 'imap'
+    state: 'enabled'
+    permanent: true
+    zone: 'trusted'
+
+  - service: 'mysql'
+    state: 'enabled'
+    permanent: true
+    zone: 'trusted'
+
+firewalld_zones:
+  - zone: 'trusted'
+    permanent: true
+    state: 'enabled'
+    interface: 'eth1'
+
+  - zone: 'public'
+    permanent: true
+    state: 'enabled'
+    interface: 'eth2'
+
+  - zone: 'internal'
+    permanent: true
+    state: 'enabled'
+    interface: 'eth0'
+
+  - zone: 'dmz'
+    permanent: true
+    state: 'enabled'
+    interface: 'eth4'
+
+pri_domain_name: 'alvarotech.es'
