@@ -1,5 +1,5 @@
 # Escenario Hacking Etico
-
+Autor: Álvaro de Rojas Maraver
 ## Resumen
 
 Este trabajo consiste en el diseño, desarrollo y explotación de un laboratorio de ciberseguridad que simula una infraestructura corporativa. 
