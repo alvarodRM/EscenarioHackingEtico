@@ -22,7 +22,7 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
 
  * VirtualBox: https://www.virtualbox.org/wiki/Downloads
  * Vagrant
- * * Linux: sudo apt-get -y install ansible
- * * macOS: brew install ansible
- * * Windows: https://www.vagrantup.com/
+   * Linux: sudo apt-get -y install ansible
+   * macOS: brew install ansible
+   * Windows: https://www.vagrantup.com/
  * Ansible
