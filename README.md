@@ -1,10 +1,10 @@
 # Escenario Hacking Etico
 Autor: Álvaro de Rojas Maraver
 
-## Infraestructura
+## 1. Infraestructura
 <img width="1050" alt="Captura de pantalla 2023-02-05 a las 0 59 27" src="https://user-images.githubusercontent.com/105986456/216794651-c78f6693-3bc5-425a-bbdb-3a1f1ffb13a8.png">
 
-## Resumen
+## 2. Resumen
 
 Este trabajo consiste en el diseño, desarrollo y explotación de un laboratorio de ciberseguridad que simula una infraestructura corporativa. 
 
@@ -18,7 +18,7 @@ En el presente trabajo se pondrán en práctica diversas técnicas de pentesting
 
 El objetivo consiste en encontrar las vulnerabilidades existentes en el escenario, lograr tener el control total sobre las máquinas, obteniendo permisos de administrador y encontrando las banderas ocultas en el escenario.
 
-## Requisitos
+## 3. Requisitos
 
  * VirtualBox
    * Linux, macOS y Windows: https://www.virtualbox.org/wiki/Downloads
@@ -31,4 +31,4 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
    * macOS:
    * Windows: 
 
-## Instalación y despliegue
+## 4. Instalación y despliegue
