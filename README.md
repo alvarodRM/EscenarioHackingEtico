@@ -20,6 +20,9 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
 
 ## Requisitos
 
- * Descargar VirtualBox: https://www.virtualbox.org/wiki/Downloads
- * Instalar Vagrant
- * Instalar Ansible
+ * VirtualBox: https://www.virtualbox.org/wiki/Downloads
+ * Vagrant
+ * * Linux: sudo apt-get -y install ansible
+ * * macOS: brew install ansible
+ * * Windows: https://www.vagrantup.com/
+ * Ansible
