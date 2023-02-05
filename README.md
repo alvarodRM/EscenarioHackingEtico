@@ -32,3 +32,7 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
    * Windows: 
 
 ## 4. Instalación y despliegue
+
+```
+vagrant up
+```
