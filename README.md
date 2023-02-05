@@ -27,3 +27,8 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
    * macOS: "brew install vagrant"
    * Windows: https://www.vagrantup.com/
  * Ansible
+   * Linux:
+   * macOS:
+   * Windows: 
+
+## Instalación y despliegue
