@@ -17,3 +17,5 @@ laboratorio estará formada por varias redes internas, servidores, equipos final
 En el presente trabajo se pondrán en práctica diversas técnicas de pentesting para conseguir romper el perímetro de cada red interna y comprometer el dominio completo de la infraestructura corporativa. Para realizar la auditoría del laboratorio se utilizará Kali Linux como sistema operativo de la máquina atacante y las herramientas open source que nos proporciona dicha distribución de Linux. Para explotar el escenario se seguirán las diversas tácticas y técnicas que nos ofrece la matriz del modelo Mitre Att&ck: Acceso inicial, ejecución, persistencia, escalada de privilegios, evasión de la defensa, acceso mediante credenciales, descubrimiento, movimiento lateral, recolección de información, comando y control, exfiltración e impacto.
 
 El objetivo consiste en encontrar las vulnerabilidades existentes en el escenario, lograr tener el control total sobre las máquinas, obteniendo permisos de administrador y encontrando las banderas ocultas en el escenario.
+
+## Requisitos
