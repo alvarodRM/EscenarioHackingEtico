@@ -20,7 +20,8 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
 
 ## Requisitos
 
- * VirtualBox: https://www.virtualbox.org/wiki/Downloads
+ * VirtualBox
+   * Linux, macOS y Windows: https://www.virtualbox.org/wiki/Downloads
  * Vagrant
    * Linux: sudo apt-get -y install vagrant
    * macOS: brew install vagrant
