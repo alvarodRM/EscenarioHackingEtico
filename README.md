@@ -23,7 +23,7 @@ El objetivo consiste en encontrar las vulnerabilidades existentes en el escenari
  * VirtualBox
    * Linux, macOS y Windows: https://www.virtualbox.org/wiki/Downloads
  * Vagrant
-   * Linux: sudo apt-get -y install vagrant
-   * macOS: brew install vagrant
+   * Linux: "sudo apt-get -y install vagrant"
+   * macOS: "brew install vagrant"
    * Windows: https://www.vagrantup.com/
  * Ansible
