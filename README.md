@@ -19,3 +19,7 @@ En el presente trabajo se pondrán en práctica diversas técnicas de pentesting
 El objetivo consiste en encontrar las vulnerabilidades existentes en el escenario, lograr tener el control total sobre las máquinas, obteniendo permisos de administrador y encontrando las banderas ocultas en el escenario.
 
 ## Requisitos
+
+ * Descargar VirtualBox: https://www.virtualbox.org/wiki/Downloads
+ * Instalar Vagrant
+ * Instalar Ansible
