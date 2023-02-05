@@ -1,5 +1,9 @@
 # Escenario Hacking Etico
 Autor: Álvaro de Rojas Maraver
+
+## Infraestructura
+<img width="612" alt="Captura de pantalla 2023-02-05 a las 0 59 27" src="https://user-images.githubusercontent.com/105986456/216794651-c78f6693-3bc5-425a-bbdb-3a1f1ffb13a8.png">
+
 ## Resumen
 
 Este trabajo consiste en el diseño, desarrollo y explotación de un laboratorio de ciberseguridad que simula una infraestructura corporativa. 
